@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Health Screening — Royal Regulation</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --obsidian: #0D0D0D; --sovereign: #1A1A1A; --carbon: #2C2A24;
+    --bronze: #8B7355; --gold: #D4A853; --parchment: #F5F0E8;
+    --muted: #888780; --dim: #5F5E5A;
+    --red: #F09595; --red-bg: rgba(240,149,149,0.08);
+    --green: #5DCAA5; --green-bg: rgba(93,202,165,0.08);
+    --amber: #EF9F27; --amber-bg: rgba(239,159,39,0.08);
+  }
+  body { background: var(--obsidian); color: var(--parchment); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+  .page { max-width: 680px; margin: 0 auto; padding: 3rem 2rem 5rem; }
+  .brand { display: flex; align-items: center; gap: 1rem; margin-bottom: 3rem; padding-bottom: 1.5rem; border-bottom: 0.5px solid var(--carbon); }
+  .brand-name { font-family: 'EB Garamond', Georgia, serif; font-size: 18px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--parchment); }
+  .brand-divider { width: 0.5px; height: 24px; background: var(--carbon); }
+  .brand-tag { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--bronze); }
+  .form-tag { display: inline-block; font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); background: rgba(212,168,83,0.1); border: 0.5px solid rgba(212,168,83,0.3); padding: 5px 12px; border-radius: 3px; margin-bottom: 1rem; }
+  .form-title { font-family: 'EB Garamond', Georgia, serif; font-size: 32px; color: var(--parchment); line-height: 1.2; margin-bottom: 1rem; }
+  .form-intro { font-size: 14px; color: var(--muted); line-height: 1.75; max-width: 520px; }
+  .notice { background: rgba(212,168,83,0.06); border: 0.5px solid rgba(212,168,83,0.2); border-radius: 6px; padding: 1rem 1.25rem; margin: 1.5rem 0; font-size: 13px; color: var(--bronze); line-height: 1.65; }
+  .field-group { margin-bottom: 1.5rem; }
+  .field-label { display: block; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--bronze); margin-bottom: 8px; }
+  .field-input { width: 100%; background: var(--sovereign); border: 0.5px solid var(--carbon); border-radius: 4px; color: var(--parchment); font-size: 15px; padding: 12px 14px; outline: none; transition: border-color 0.15s; font-family: inherit; }
+  .field-input::placeholder { color: var(--dim); }
+  .field-input:focus { border-color: var(--bronze); }
+  textarea.field-input { resize: vertical; min-height: 80px; }
+  .divider { height: 0.5px; background: var(--carbon); margin: 2rem 0; }
+  .section-header { margin: 2.5rem 0 1.25rem; }
+  .section-tag { display: inline-block; font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--bronze); background: rgba(139,115,85,0.1); border: 0.5px solid rgba(139,115,85,0.3); padding: 4px 10px; border-radius: 3px; margin-bottom: 6px; }
+  .section-title { font-family: 'EB Garamond', Georgia, serif; font-size: 20px; color: var(--parchment); margin-bottom: 4px; }
+  .section-desc { font-size: 12px; color: var(--dim); line-height: 1.6; }
+  .question-block { margin-bottom: 1.25rem; padding: 1.25rem; background: var(--sovereign); border: 0.5px solid var(--carbon); border-radius: 6px; }
+  .question-label { font-size: 14px; color: var(--parchment); line-height: 1.55; margin-bottom: 4px; }
+  .question-desc { font-size: 12px; color: var(--dim); line-height: 1.5; margin-bottom: 1rem; }
+  .radio-group { display: flex; flex-direction: column; gap: 8px; }
+  .radio-option { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: var(--obsidian); border: 0.5px solid var(--carbon); border-radius: 4px; cursor: pointer; transition: all 0.15s; }
+  .radio-option:hover { border-color: var(--bronze); }
+  .radio-option.selected-green { border-color: var(--green); background: var(--green-bg); }
+  .radio-option.selected-amber { border-color: var(--amber); background: var(--amber-bg); }
+  .radio-option.selected-red { border-color: var(--red); background: var(--red-bg); }
+  .radio-option.selected-gold { border-color: var(--gold); background: rgba(212,168,83,0.08); }
+  .radio-dot { width: 14px; height: 14px; border-radius: 50%; border: 0.5px solid var(--carbon); flex-shrink: 0; transition: all 0.15s; }
+  .radio-option.selected-green .radio-dot { background: var(--green); border-color: var(--green); }
+  .radio-option.selected-amber .radio-dot { background: var(--amber); border-color: var(--amber); }
+  .radio-option.selected-red .radio-dot { background: var(--red); border-color: var(--red); }
+  .radio-option.selected-gold .radio-dot { background: var(--gold); border-color: var(--gold); }
+  .radio-text { font-size: 13px; color: var(--muted); transition: color 0.15s; }
+  .radio-option.selected-green .radio-text,
+  .radio-option.selected-amber .radio-text,
+  .radio-option.selected-red .radio-text,
+  .radio-option.selected-gold .radio-text { color: var(--parchment); }
+  .detail-field { margin-top: 10px; display: none; }
+  .detail-field.visible { display: block; }
+  .submit-btn { width: 100%; padding: 16px; background: var(--gold); color: var(--obsidian); border: none; border-radius: 4px; font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; transition: opacity 0.15s; margin-top: 1rem; }
+  .submit-btn:hover { opacity: 0.88; }
+  .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .error-msg { font-size: 13px; color: var(--red); background: var(--red-bg); border: 0.5px solid rgba(240,149,149,0.2); border-radius: 4px; padding: 12px 14px; margin-top: 12px; display: none; }
+  .footer { margin-top: 4rem; padding-top: 1.5rem; border-top: 0.5px solid var(--carbon); display: flex; justify-content: space-between; }
+  .footer-brand { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim); }
+  .footer-note { font-size: 11px; color: var(--dim); }
+  #successScreen { display: none; }
+  .success-inner { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; text-align: center; }
+  .success-mark { font-family: 'EB Garamond', Georgia, serif; font-size: 64px; color: var(--gold); margin-bottom: 1.5rem; }
+  .success-title { font-family: 'EB Garamond', Georgia, serif; font-size: 28px; color: var(--parchment); margin-bottom: 1rem; }
+  .success-body { font-size: 14px; color: var(--muted); line-height: 1.75; max-width: 420px; }
+  @media (max-width: 520px) { .page { padding: 2rem 1.25rem 4rem; } }
+</style>
+</head>
+<body>
+
+<div id="formPage">
+<div class="page">
+  <div class="brand">
+    <div class="brand-name">Royal Regulation</div>
+    <div class="brand-divider"></div>
+    <div class="brand-tag">Health Screening</div>
+  </div>
+
+  <div style="margin-bottom:2rem;">
+    <div class="form-tag">Pre-intake · Health & Safety</div>
+    <h1 class="form-title">Health Screening</h1>
+    <p class="form-intro">This form helps ensure the program is designed safely around you. All information is strictly confidential and used only to tailor your experience. Please answer honestly — there are no right or wrong answers.</p>
+  </div>
+
+  <div class="notice">This program involves breathwork practices that can produce intense physical and emotional responses. Certain health conditions require modification or clearance before participation. Your safety is the priority.</div>
+
+  <!-- Personal details -->
+  <div class="field-group">
+    <label class="field-label" for="fullName">Full name</label>
+    <input class="field-input" type="text" id="fullName" placeholder="Enter your full name" autocomplete="name" />
+  </div>
+  <div class="field-group">
+    <label class="field-label" for="email">Email address</label>
+    <input class="field-input" type="email" id="email" placeholder="Enter your email address" autocomplete="email" />
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Section 1: Medical -->
+  <div class="section-header">
+    <div class="section-tag">Section 1</div>
+    <div class="section-title">Medical History</div>
+    <div class="section-desc">Please answer each question as accurately as possible.</div>
+  </div>
+
+  <!-- Cardiovascular -->
+  <div class="question-block">
+    <div class="question-label">Do you have any cardiovascular conditions?</div>
+    <div class="question-desc">Including heart disease, arrhythmia, high blood pressure, history of heart attack or stroke.</div>
+    <div class="radio-group" id="cardiovascular">
+      <div class="radio-option" onclick="select('cardiovascular','None','green')"><div class="radio-dot"></div><span class="radio-text">None</span></div>
+      <div class="radio-option" onclick="select('cardiovascular','Yes - disclosed','amber')"><div class="radio-dot"></div><span class="radio-text">Yes — I will provide details below</span></div>
+    </div>
+    <div class="detail-field" id="cardiovascular-detail">
+      <label class="field-label" style="margin-top:4px;">Please describe the condition and current treatment</label>
+      <textarea class="field-input" id="cardiovascular_detail" placeholder="Describe your condition and any current treatment or medication..."></textarea>
+    </div>
+  </div>
+
+  <!-- Respiratory -->
+  <div class="question-block">
+    <div class="question-label">Do you have any respiratory conditions?</div>
+    <div class="question-desc">Including asthma, COPD, chronic breathlessness, or any condition affecting breathing.</div>
+    <div class="radio-group" id="respiratory">
+      <div class="radio-option" onclick="select('respiratory','None','green')"><div class="radio-dot"></div><span class="radio-text">None</span></div>
+      <div class="radio-option" onclick="select('respiratory','Yes - disclosed','amber')"><div class="radio-dot"></div><span class="radio-text">Yes — I will provide details below</span></div>
+    </div>
+    <div class="detail-field" id="respiratory-detail">
+      <label class="field-label" style="margin-top:4px;">Please describe the condition and current treatment</label>
+      <textarea class="field-input" id="respiratory_detail" placeholder="Describe your condition and any current treatment or medication..."></textarea>
+    </div>
+  </div>
+
+  <!-- Pregnant -->
+  <div class="question-block">
+    <div class="question-label">Are you currently pregnant or trying to conceive?</div>
+    <div class="radio-group" id="pregnant">
+      <div class="radio-option" onclick="select('pregnant','No','green')"><div class="radio-dot"></div><span class="radio-text">No</span></div>
+      <div class="radio-option" onclick="select('pregnant','Yes','red')"><div class="radio-dot"></div><span class="radio-text">Yes</span></div>
+    </div>
+  </div>
+
+  <!-- Seizures -->
+  <div class="question-block">
+    <div class="question-label">Do you have a history of seizures or epilepsy?</div>
+    <div class="radio-group" id="seizures">
+      <div class="radio-option" onclick="select('seizures','No','green')"><div class="radio-dot"></div><span class="radio-text">No</span></div>
+      <div class="radio-option" onclick="select('seizures','Yes','red')"><div class="radio-dot"></div><span class="radio-text">Yes</span></div>
+    </div>
+  </div>
+
+  <!-- Psychiatric medications -->
+  <div class="question-block">
+    <div class="question-label">Are you currently prescribed any psychiatric or psychoactive medications?</div>
+    <div class="question-desc">Including antidepressants, antipsychotics, mood stabilisers, or sleep medications.</div>
+    <div class="radio-group" id="psych_meds">
+      <div class="radio-option" onclick="select('psych_meds','None','green')"><div class="radio-dot"></div><span class="radio-text">None</span></div>
+      <div class="radio-option" onclick="select('psych_meds','Yes - GP aware','amber')"><div class="radio-dot"></div><span class="radio-text">Yes — my GP is aware</span></div>
+      <div class="radio-option" onclick="select('psych_meds','Yes - GP not aware','red')"><div class="radio-dot"></div><span class="radio-text">Yes — my GP is not aware</span></div>
+    </div>
+    <div class="detail-field" id="psych_meds-detail">
+      <label class="field-label" style="margin-top:4px;">Please list your medications</label>
+      <textarea class="field-input" id="psych_meds_detail" placeholder="This information is confidential and used only to ensure safe practice delivery..."></textarea>
+    </div>
+  </div>
+
+  <!-- Recent surgery or injury -->
+  <div class="question-block">
+    <div class="question-label">Have you had any recent surgery or significant injury?</div>
+    <div class="question-desc">In the past 6 months.</div>
+    <div class="radio-group" id="surgery">
+      <div class="radio-option" onclick="select('surgery','No','green')"><div class="radio-dot"></div><span class="radio-text">No</span></div>
+      <div class="radio-option" onclick="select('surgery','Yes - detail below','amber')"><div class="radio-dot"></div><span class="radio-text">Yes — I will provide details below</span></div>
+    </div>
+    <div class="detail-field" id="surgery-detail">
+      <label class="field-label" style="margin-top:4px;">Please describe</label>
+      <textarea class="field-input" id="surgery_detail" placeholder="Describe the surgery or injury and current recovery status..."></textarea>
+    </div>
+  </div>
+
+  <!-- Medical care -->
+  <div class="question-block">
+    <div class="question-label">Are you currently under the care of a doctor, specialist, or mental health professional?</div>
+    <div class="radio-group" id="medical_care">
+      <div class="radio-option" onclick="select('medical_care','No','green')"><div class="radio-dot"></div><span class="radio-text">No</span></div>
+      <div class="radio-option" onclick="select('medical_care','Yes','amber')"><div class="radio-dot"></div><span class="radio-text">Yes</span></div>
+    </div>
+    <div class="detail-field" id="medical_care-detail">
+      <label class="field-label" style="margin-top:4px;">For what condition?</label>
+      <textarea class="field-input" id="medical_care_detail" placeholder="We may ask you to seek clearance from your practitioner before starting..."></textarea>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Section 2: Experience -->
+  <div class="section-header">
+    <div class="section-tag">Section 2</div>
+    <div class="section-title">Prior Experience</div>
+    <div class="section-desc">Helps us understand your starting point and calibrate the program accordingly.</div>
+  </div>
+
+  <!-- Breathwork experience -->
+  <div class="question-block">
+    <div class="question-label">What is your experience with breathwork?</div>
+    <div class="radio-group" id="breathwork_exp">
+      <div class="radio-option" onclick="select('breathwork_exp','None','gold')"><div class="radio-dot"></div><span class="radio-text">None — this is new to me</span></div>
+      <div class="radio-option" onclick="select('breathwork_exp','Some','gold')"><div class="radio-dot"></div><span class="radio-text">Some — I've tried it a few times</span></div>
+      <div class="radio-option" onclick="select('breathwork_exp','Regular practice','gold')"><div class="radio-dot"></div><span class="radio-text">Regular practice — it's part of my routine</span></div>
+    </div>
+  </div>
+
+  <!-- Meditation experience -->
+  <div class="question-block">
+    <div class="question-label">What is your experience with meditation?</div>
+    <div class="radio-group" id="meditation_exp">
+      <div class="radio-option" onclick="select('meditation_exp','None','gold')"><div class="radio-dot"></div><span class="radio-text">None — this is new to me</span></div>
+      <div class="radio-option" onclick="select('meditation_exp','Some','gold')"><div class="radio-dot"></div><span class="radio-text">Some — I've tried it a few times</span></div>
+      <div class="radio-option" onclick="select('meditation_exp','Regular practice','gold')"><div class="radio-dot"></div><span class="radio-text">Regular practice — it's part of my routine</span></div>
+    </div>
+  </div>
+
+  <!-- Cold exposure experience -->
+  <div class="question-block">
+    <div class="question-label">What is your experience with cold exposure?</div>
+    <div class="question-desc">Cold showers, ice baths, open water swimming.</div>
+    <div class="radio-group" id="cold_exp">
+      <div class="radio-option" onclick="select('cold_exp','None','gold')"><div class="radio-dot"></div><span class="radio-text">None — this is new to me</span></div>
+      <div class="radio-option" onclick="select('cold_exp','Some','gold')"><div class="radio-dot"></div><span class="radio-text">Some — I've tried it a few times</span></div>
+      <div class="radio-option" onclick="select('cold_exp','Regular practice','gold')"><div class="radio-dot"></div><span class="radio-text">Regular practice — it's part of my routine</span></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Section 3: Additional -->
+  <div class="section-header">
+    <div class="section-tag">Section 3</div>
+    <div class="section-title">Anything Else</div>
+    <div class="section-desc">Is there anything else about your health, history, or current situation that you think your coach should know before the program begins?</div>
+  </div>
+
+  <div class="field-group">
+    <textarea class="field-input" id="additional_info" placeholder="Optional — share anything you feel is relevant..." style="min-height:100px;"></textarea>
+  </div>
+
+  <div class="divider"></div>
+
+  <button class="submit-btn" id="submitBtn" onclick="submitForm()">Submit health screening</button>
+  <div class="error-msg" id="errorMsg"></div>
+
+  <div class="footer">
+    <div class="footer-brand">Royal Regulation · Nasim van Veenendaal</div>
+    <div class="footer-note">Strictly confidential</div>
+  </div>
+</div>
+</div>
+
+<div id="successScreen">
+<div class="page">
+  <div class="brand">
+    <div class="brand-name">Royal Regulation</div>
+    <div class="brand-divider"></div>
+    <div class="brand-tag">Health Screening</div>
+  </div>
+  <div class="success-inner">
+    <div class="success-mark">✦</div>
+    <h2 class="success-title">Screening submitted.</h2>
+    <p class="success-body">Your health screening has been received. Your coach will review it before your intake call and will be in touch if anything needs clarification. See you on the call.</p>
+  </div>
+</div>
+</div>
+
+<script>
+const WEBHOOK_URL = 'https://hook.eu1.make.com/rfcu5xxjvme70los51ced7alh1knjujq';
+const selections = {};
+
+function select(field, value, colorClass) {
+  selections[field] = value;
+  const group = document.getElementById(field);
+  group.querySelectorAll('.radio-option').forEach(opt => {
+    opt.classList.remove('selected-green','selected-amber','selected-red','selected-gold');
+  });
+  event.currentTarget.classList.add('selected-' + colorClass);
+
+  const detailEl = document.getElementById(field + '-detail');
+  if (detailEl) {
+    const showDetail = value !== 'None' && value !== 'No';
+    detailEl.classList.toggle('visible', showDetail);
+  }
+}
+
+async function submitForm() {
+  const fullName = document.getElementById('fullName').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const errEl = document.getElementById('errorMsg');
+  errEl.style.display = 'none';
+
+  if (!fullName) { showError('Please enter your full name.'); return; }
+  if (!email || !email.includes('@')) { showError('Please enter a valid email address.'); return; }
+
+  const required = ['cardiovascular','respiratory','pregnant','seizures','psych_meds','surgery','medical_care','breathwork_exp','meditation_exp','cold_exp'];
+  for (const field of required) {
+    if (!selections[field]) { showError('Please answer all questions before submitting.'); return; }
+  }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true; btn.textContent = 'Submitting...';
+
+  const today = new Date().toISOString().split('T')[0];
+  const payload = {
+    form_type: 'HEALTH_SCREENING',
+    full_name: fullName,
+    email: email,
+    date_completed: today,
+    cardiovascular_conditions: selections['cardiovascular'],
+    cardiovascular_detail: document.getElementById('cardiovascular_detail').value.trim(),
+    respiratory_conditions: selections['respiratory'],
+    respiratory_detail: document.getElementById('respiratory_detail').value.trim(),
+    pregnant_or_trying: selections['pregnant'],
+    history_of_seizures: selections['seizures'],
+    psychiatric_medications: selections['psych_meds'],
+    psychiatric_medication_detail: document.getElementById('psych_meds_detail').value.trim(),
+    recent_surgery_or_injury: selections['surgery'],
+    surgery_injury_detail: document.getElementById('surgery_detail').value.trim(),
+    currently_under_medical_care: selections['medical_care'],
+    medical_care_detail: document.getElementById('medical_care_detail').value.trim(),
+    breathwork_experience: selections['breathwork_exp'],
+    meditation_experience: selections['meditation_exp'],
+    cold_exposure_experience: selections['cold_exp'],
+    additional_information: document.getElementById('additional_info').value.trim()
+  };
+
+  try {
+    const res = await fetch(WEBHOOK_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+    if (res.ok) {
+      document.getElementById('formPage').style.display = 'none';
+      document.getElementById('successScreen').style.display = 'block';
+    } else {
+      showError('Something went wrong. Please try again or contact your coach.');
+      btn.disabled = false; btn.textContent = 'Submit health screening';
+    }
+  } catch(e) {
+    showError('Connection error. Please check your internet and try again.');
+    btn.disabled = false; btn.textContent = 'Submit health screening';
+  }
+}
+
+function showError(msg) { const el = document.getElementById('errorMsg'); el.textContent = msg; el.style.display = 'block'; }
+</script>
+</body>
+</html>

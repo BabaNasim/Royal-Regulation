@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Perceived Stress Scale — Royal Regulation</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --obsidian: #0D0D0D;
+    --sovereign: #1A1A1A;
+    --carbon: #2C2A24;
+    --bronze: #8B7355;
+    --gold: #D4A853;
+    --parchment: #F5F0E8;
+    --muted: #888780;
+    --dim: #5F5E5A;
+  }
+
+  html { font-size: 16px; }
+
+  body {
+    background: var(--obsidian);
+    color: var(--parchment);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  .page {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 3rem 2rem 5rem;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 3rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 0.5px solid var(--carbon);
+  }
+
+  .brand-name {
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 18px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--parchment);
+  }
+
+  .brand-divider {
+    width: 0.5px;
+    height: 24px;
+    background: var(--carbon);
+  }
+
+  .brand-tag {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--bronze);
+  }
+
+  .form-header { margin-bottom: 2.5rem; }
+
+  .form-tag {
+    display: inline-block;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    background: rgba(212, 168, 83, 0.1);
+    border: 0.5px solid rgba(212, 168, 83, 0.3);
+    padding: 5px 12px;
+    border-radius: 3px;
+    margin-bottom: 1rem;
+  }
+
+  .form-title {
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 32px;
+    font-weight: 400;
+    color: var(--parchment);
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    letter-spacing: 0.01em;
+  }
+
+  .form-intro {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.75;
+    max-width: 520px;
+  }
+
+  .field-group { margin-bottom: 2rem; }
+
+  .field-label {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--bronze);
+    margin-bottom: 8px;
+  }
+
+  .field-input {
+    width: 100%;
+    background: var(--sovereign);
+    border: 0.5px solid var(--carbon);
+    border-radius: 4px;
+    color: var(--parchment);
+    font-size: 15px;
+    padding: 12px 14px;
+    outline: none;
+    transition: border-color 0.15s;
+    font-family: inherit;
+  }
+
+  .field-input::placeholder { color: var(--dim); }
+  .field-input:focus { border-color: var(--bronze); }
+
+  .progress-wrap {
+    margin-bottom: 2.5rem;
+  }
+
+  .progress-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .progress-label {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+
+  .progress-count {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--bronze);
+  }
+
+  .progress-track {
+    height: 1px;
+    background: var(--carbon);
+    border-radius: 1px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--gold);
+    border-radius: 1px;
+    transition: width 0.3s ease;
+    width: 0%;
+  }
+
+  .question-block {
+    margin-bottom: 1.5rem;
+    padding: 1.5rem;
+    background: var(--sovereign);
+    border: 0.5px solid var(--carbon);
+    border-radius: 6px;
+    transition: border-color 0.2s;
+  }
+
+  .question-block.answered { border-color: #3A3228; }
+
+  .question-num {
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 10px;
+  }
+
+  .question-text {
+    font-size: 15px;
+    color: var(--parchment);
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+  }
+
+  .options {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .option {
+    flex: 1;
+    min-width: 90px;
+    padding: 10px 8px;
+    background: var(--obsidian);
+    border: 0.5px solid var(--carbon);
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .option:hover {
+    border-color: var(--bronze);
+    background: #1F1E18;
+  }
+
+  .option.selected {
+    background: rgba(212, 168, 83, 0.08);
+    border-color: var(--gold);
+  }
+
+  .option-value {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--muted);
+    transition: color 0.15s;
+  }
+
+  .option.selected .option-value { color: var(--gold); }
+
+  .option-label {
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    color: var(--dim);
+    transition: color 0.15s;
+  }
+
+  .option.selected .option-label { color: var(--bronze); }
+
+  .score-panel {
+    background: var(--sovereign);
+    border: 0.5px solid var(--carbon);
+    border-radius: 6px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    display: none;
+  }
+
+  .score-panel.visible { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+
+  .score-number {
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 48px;
+    color: var(--parchment);
+    line-height: 1;
+  }
+
+  .score-meta { text-align: right; }
+
+  .score-meta-label {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 4px;
+  }
+
+  .score-category {
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+  }
+
+  .divider {
+    height: 0.5px;
+    background: var(--carbon);
+    margin: 2rem 0;
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: 16px;
+    background: var(--gold);
+    color: var(--obsidian);
+    border: none;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+
+  .submit-btn:hover { opacity: 0.88; }
+  .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .error {
+    font-size: 13px;
+    color: #F09595;
+    background: rgba(240, 149, 149, 0.08);
+    border: 0.5px solid rgba(240, 149, 149, 0.2);
+    border-radius: 4px;
+    padding: 12px 14px;
+    margin-top: 12px;
+    display: none;
+  }
+
+  .success-screen {
+    display: none;
+    text-align: center;
+    padding: 4rem 2rem;
+  }
+
+  .success-mark {
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 64px;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+    line-height: 1;
+  }
+
+  .success-title {
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 28px;
+    color: var(--parchment);
+    margin-bottom: 1rem;
+  }
+
+  .success-body {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.75;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .footer {
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 0.5px solid var(--carbon);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-brand {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+
+  .footer-note {
+    font-size: 11px;
+    color: var(--dim);
+  }
+
+  @media (max-width: 520px) {
+    .page { padding: 2rem 1.25rem 4rem; }
+    .form-title { font-size: 26px; }
+    .options { flex-direction: column; }
+    .option { flex-direction: row; justify-content: flex-start; gap: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page" id="formPage">
+
+  <div class="brand">
+    <div class="brand-name">Royal Regulation</div>
+    <div class="brand-divider"></div>
+    <div class="brand-tag">Client Assessment</div>
+  </div>
+
+  <div class="form-header">
+    <div class="form-tag">Pre-intake · Assessment 1 of 2</div>
+    <h1 class="form-title">Perceived Stress Scale</h1>
+    <p class="form-intro">The following questions ask about your feelings and thoughts during the last month. In each case, indicate how often you felt or thought a certain way. There are no right or wrong answers — answer honestly.</p>
+  </div>
+
+  <div class="field-group">
+    <label class="field-label" for="clientName">Your full name</label>
+    <input class="field-input" type="text" id="clientName" placeholder="Enter your full name" autocomplete="name" />
+  </div>
+
+  <div class="field-group">
+    <label class="field-label" for="clientEmail">Your email address</label>
+    <input class="field-input" type="email" id="clientEmail" placeholder="Enter your email address" autocomplete="email" />
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="progress-wrap">
+    <div class="progress-meta">
+      <span class="progress-label">Progress</span>
+      <span class="progress-count" id="progressCount">0 of 10</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+  </div>
+
+  <div id="questionsContainer"></div>
+
+  <div class="score-panel" id="scorePanel">
+    <div>
+      <div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--dim);margin-bottom:6px;">Your PSS score</div>
+      <div class="score-number" id="scoreNumber">0</div>
+    </div>
+    <div class="score-meta">
+      <div class="score-meta-label">Stress level</div>
+      <div class="score-category" id="scoreCategory">—</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <button class="submit-btn" id="submitBtn" onclick="submitForm()">Submit assessment</button>
+  <div class="error" id="errorMsg"></div>
+
+  <div class="footer">
+    <div class="footer-brand">Royal Regulation · Nasim van Veenendaal</div>
+    <div class="footer-note">Your data is confidential</div>
+  </div>
+
+</div>
+
+<div class="success-screen" id="successScreen">
+  <div class="page" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;">
+    <div class="brand" style="width:100%;margin-bottom:4rem;">
+      <div class="brand-name">Royal Regulation</div>
+      <div class="brand-divider"></div>
+      <div class="brand-tag">Client Assessment</div>
+    </div>
+    <div class="success-mark">✦</div>
+    <h2 class="success-title">Assessment submitted.</h2>
+    <p class="success-body">Your results have been received and saved securely. Your coach will review them before your intake call. You'll hear from Nasim soon.</p>
+  </div>
+</div>
+
+<script>
+const WEBHOOK_URL = 'https://hook.eu1.make.com/rfcu5xxjvme70los51ced7alh1knjujq';
+
+const questions = [
+  { text: "In the last month, how often have you been upset because of something that happened unexpectedly?", reversed: false },
+  { text: "In the last month, how often have you felt that you were unable to control the important things in your life?", reversed: false },
+  { text: "In the last month, how often have you felt nervous and stressed?", reversed: false },
+  { text: "In the last month, how often have you felt confident about your ability to handle your personal problems?", reversed: true },
+  { text: "In the last month, how often have you felt that things were going your way?", reversed: true },
+  { text: "In the last month, how often have you been able to control irritations in your life?", reversed: true },
+  { text: "In the last month, how often have you felt that you were on top of things?", reversed: true },
+  { text: "In the last month, how often have you been angered because of things that were outside of your control?", reversed: false },
+  { text: "In the last month, how often have you felt difficulties were piling up so high that you could not overcome them?", reversed: false },
+  { text: "In the last month, how often have you been able to control the way you spend your time?", reversed: true }
+];
+
+const optionLabels = ["Never", "Almost never", "Sometimes", "Fairly often", "Very often"];
+const answers = new Array(10).fill(null);
+
+function buildQuestions() {
+  const container = document.getElementById('questionsContainer');
+  questions.forEach((q, i) => {
+    const block = document.createElement('div');
+    block.className = 'question-block';
+    block.id = `block-${i}`;
+
+    const num = document.createElement('div');
+    num.className = 'question-num';
+    num.textContent = `Question ${i + 1} of 10`;
+
+    const text = document.createElement('div');
+    text.className = 'question-text';
+    text.textContent = q.text;
+
+    const opts = document.createElement('div');
+    opts.className = 'options';
+
+    for (let v = 0; v <= 4; v++) {
+      const btn = document.createElement('div');
+      btn.className = 'option';
+      btn.onclick = () => selectAnswer(i, v);
+      btn.innerHTML = `<span class="option-value">${v}</span><span class="option-label">${optionLabels[v]}</span>`;
+      opts.appendChild(btn);
+    }
+
+    block.appendChild(num);
+    block.appendChild(text);
+    block.appendChild(opts);
+    container.appendChild(block);
+  });
+}
+
+function selectAnswer(qIndex, value) {
+  answers[qIndex] = value;
+  const block = document.getElementById(`block-${qIndex}`);
+  block.classList.add('answered');
+  const opts = block.querySelectorAll('.option');
+  opts.forEach((o, i) => {
+    o.classList.toggle('selected', i === value);
+  });
+  updateProgress();
+  updateScore();
+}
+
+function updateProgress() {
+  const filled = answers.filter(a => a !== null).length;
+  const pct = (filled / 10) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressCount').textContent = `${filled} of 10`;
+}
+
+function getScore() {
+  let total = 0;
+  questions.forEach((q, i) => {
+    if (answers[i] === null) return;
+    total += q.reversed ? (4 - answers[i]) : answers[i];
+  });
+  return total;
+}
+
+function updateScore() {
+  const filled = answers.filter(a => a !== null).length;
+  if (filled < 10) return;
+  const score = getScore();
+  const panel = document.getElementById('scorePanel');
+  panel.classList.add('visible');
+  document.getElementById('scoreNumber').textContent = score;
+  let cat, color;
+  if (score <= 13) { cat = 'Low · 0–13'; color = '#5DCAA5'; }
+  else if (score <= 26) { cat = 'Moderate · 14–26'; color = '#EF9F27'; }
+  else { cat = 'High · 27–40'; color = '#F09595'; }
+  const catEl = document.getElementById('scoreCategory');
+  catEl.textContent = cat;
+  catEl.style.color = color;
+}
+
+async function submitForm() {
+  const name = document.getElementById('clientName').value.trim();
+  const email = document.getElementById('clientEmail').value.trim();
+  const errEl = document.getElementById('errorMsg');
+  errEl.style.display = 'none';
+
+  if (!name) { showError('Please enter your full name.'); return; }
+  if (!email || !email.includes('@')) { showError('Please enter a valid email address.'); return; }
+  const unfilled = answers.filter(a => a === null).length;
+  if (unfilled > 0) { showError(`Please answer all 10 questions. ${unfilled} remaining.`); return; }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Submitting...';
+
+  const score = getScore();
+  const stressLevel = score <= 13 ? 'Low 0-13' : score <= 26 ? 'Moderate 14-26' : 'High 27-40';
+  const today = new Date().toISOString().split('T')[0];
+
+  const payload = {
+    form_type: 'PSS',
+    client_name: name,
+    client_email: email,
+    date_completed: today,
+    total_score: score,
+    stress_level: stressLevel,
+    pss_q1: answers[0],
+    pss_q2: answers[1],
+    pss_q3: answers[2],
+    pss_q4: answers[3],
+    pss_q5: answers[4],
+    pss_q6: answers[5],
+    pss_q7: answers[6],
+    pss_q8: answers[7],
+    pss_q9: answers[8],
+    pss_q10: answers[9]
+  };
+
+  try {
+    const res = await fetch(WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (res.ok) {
+      document.getElementById('formPage').style.display = 'none';
+      document.getElementById('successScreen').style.display = 'block';
+    } else {
+      showError('Something went wrong. Please try again or contact your coach.');
+      btn.disabled = false;
+      btn.textContent = 'Submit assessment';
+    }
+  } catch (e) {
+    showError('Connection error. Please check your internet and try again.');
+    btn.disabled = false;
+    btn.textContent = 'Submit assessment';
+  }
+}
+
+function showError(msg) {
+  const el = document.getElementById('errorMsg');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+buildQuestions();
+</script>
+</body>
+</html>

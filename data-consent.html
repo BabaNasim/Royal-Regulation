@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data & Privacy Consent — Royal Regulation</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --obsidian: #0D0D0D; --sovereign: #1A1A1A; --carbon: #2C2A24;
+    --bronze: #8B7355; --gold: #D4A853; --parchment: #F5F0E8;
+    --muted: #888780; --dim: #5F5E5A;
+    --green: #5DCAA5; --green-bg: rgba(93,202,165,0.08);
+  }
+  body { background: var(--obsidian); color: var(--parchment); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+  .page { max-width: 680px; margin: 0 auto; padding: 3rem 2rem 5rem; }
+  .brand { display: flex; align-items: center; gap: 1rem; margin-bottom: 3rem; padding-bottom: 1.5rem; border-bottom: 0.5px solid var(--carbon); }
+  .brand-name { font-family: 'EB Garamond', Georgia, serif; font-size: 18px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--parchment); }
+  .brand-divider { width: 0.5px; height: 24px; background: var(--carbon); }
+  .brand-tag { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--bronze); }
+  .form-tag { display: inline-block; font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); background: rgba(212,168,83,0.1); border: 0.5px solid rgba(212,168,83,0.3); padding: 5px 12px; border-radius: 3px; margin-bottom: 1rem; }
+  .form-title { font-family: 'EB Garamond', Georgia, serif; font-size: 32px; color: var(--parchment); line-height: 1.2; margin-bottom: 1rem; }
+  .form-intro { font-size: 14px; color: var(--muted); line-height: 1.75; }
+  .divider { height: 0.5px; background: var(--carbon); margin: 2rem 0; }
+  .section { margin-bottom: 2rem; padding: 1.5rem; background: var(--sovereign); border: 0.5px solid var(--carbon); border-radius: 6px; }
+  .section-tag { display: inline-block; font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--bronze); background: rgba(139,115,85,0.1); border: 0.5px solid rgba(139,115,85,0.3); padding: 4px 10px; border-radius: 3px; margin-bottom: 10px; }
+  .section-title { font-family: 'EB Garamond', Georgia, serif; font-size: 18px; color: var(--parchment); margin-bottom: 10px; }
+  .section-body { font-size: 13px; color: var(--muted); line-height: 1.75; }
+  .section-body ul { margin: 8px 0 0 16px; }
+  .section-body li { margin-bottom: 4px; }
+  .field-group { margin-bottom: 1.5rem; }
+  .field-label { display: block; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--bronze); margin-bottom: 8px; }
+  .field-input { width: 100%; background: var(--sovereign); border: 0.5px solid var(--carbon); border-radius: 4px; color: var(--parchment); font-size: 15px; padding: 12px 14px; outline: none; transition: border-color 0.15s; font-family: inherit; }
+  .field-input::placeholder { color: var(--dim); }
+  .field-input:focus { border-color: var(--bronze); }
+  .consent-item { display: flex; align-items: flex-start; gap: 12px; padding: 1rem 1.25rem; background: var(--sovereign); border: 0.5px solid var(--carbon); border-radius: 6px; margin-bottom: 10px; cursor: pointer; transition: all 0.15s; }
+  .consent-item:hover { border-color: var(--bronze); }
+  .consent-item.checked { border-color: var(--green); background: var(--green-bg); }
+  .checkbox { width: 18px; height: 18px; border: 0.5px solid var(--carbon); border-radius: 3px; flex-shrink: 0; margin-top: 2px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+  .consent-item.checked .checkbox { background: var(--green); border-color: var(--green); }
+  .checkmark { font-size: 11px; color: var(--obsidian); display: none; }
+  .consent-item.checked .checkmark { display: block; }
+  .consent-text { font-size: 13px; color: var(--muted); line-height: 1.6; transition: color 0.15s; }
+  .consent-item.checked .consent-text { color: var(--parchment); }
+  .signature-group { margin-top: 1.5rem; }
+  .submit-btn { width: 100%; padding: 16px; background: var(--gold); color: var(--obsidian); border: none; border-radius: 4px; font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; transition: opacity 0.15s; margin-top: 1rem; }
+  .submit-btn:hover { opacity: 0.88; }
+  .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .error-msg { font-size: 13px; color: #F09595; background: rgba(240,149,149,0.08); border: 0.5px solid rgba(240,149,149,0.2); border-radius: 4px; padding: 12px 14px; margin-top: 12px; display: none; }
+  .footer { margin-top: 4rem; padding-top: 1.5rem; border-top: 0.5px solid var(--carbon); display: flex; justify-content: space-between; }
+  .footer-brand { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim); }
+  .footer-note { font-size: 11px; color: var(--dim); }
+  #successScreen { display: none; }
+  .success-inner { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; text-align: center; }
+  .success-mark { font-family: 'EB Garamond', Georgia, serif; font-size: 64px; color: var(--gold); margin-bottom: 1.5rem; }
+  .success-title { font-family: 'EB Garamond', Georgia, serif; font-size: 28px; color: var(--parchment); margin-bottom: 1rem; }
+  .success-body { font-size: 14px; color: var(--muted); line-height: 1.75; max-width: 420px; }
+  @media (max-width: 520px) { .page { padding: 2rem 1.25rem 4rem; } }
+</style>
+</head>
+<body>
+
+<div id="formPage">
+<div class="page">
+  <div class="brand">
+    <div class="brand-name">Royal Regulation</div>
+    <div class="brand-divider"></div>
+    <div class="brand-tag">Data & Privacy Consent</div>
+  </div>
+
+  <div style="margin-bottom:2rem;">
+    <div class="form-tag">Pre-intake · Data Consent</div>
+    <h1 class="form-title">Data & Privacy Consent</h1>
+    <p class="form-intro">Before we begin, we need your informed consent to collect and use your personal and biometric data as part of the Royal Regulation program. Please read each section carefully and confirm your agreement below.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- What we collect -->
+  <div class="section">
+    <div class="section-tag">What we collect</div>
+    <div class="section-title">Data We Work With</div>
+    <div class="section-body">
+      During the program we collect and work with:
+      <ul>
+        <li>Biometric data from your wearable device — heart rate, HRV, sleep data, stress scores, body temperature</li>
+        <li>Assessment scores — PSS, MAIA, and BOLT results</li>
+        <li>Session notes and observations from intake and weekly calls</li>
+        <li>Personal information you share during the program</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- How we use it -->
+  <div class="section">
+    <div class="section-tag">How we use it</div>
+    <div class="section-title">Purpose of Data Collection</div>
+    <div class="section-body">
+      Your data is used exclusively to:
+      <ul>
+        <li>Generate your personalised weekly reports</li>
+        <li>Track your progress and calibrate the program to your nervous system</li>
+        <li>Inform session content and coaching recommendations</li>
+        <li>Identify patterns that support your transformation</li>
+      </ul>
+      Your data is never sold or shared with third parties for any commercial purpose.
+    </div>
+  </div>
+
+  <!-- Storage -->
+  <div class="section">
+    <div class="section-tag">Storage & security</div>
+    <div class="section-title">How Your Data is Stored</div>
+    <div class="section-body">
+      Your data is stored securely in a private Notion workspace accessible only to your coach. It is processed using encrypted tools including Make.com and the Anthropic Claude API. No data is stored on unsecured personal devices.
+    </div>
+  </div>
+
+  <!-- Your rights -->
+  <div class="section">
+    <div class="section-tag">Your rights</div>
+    <div class="section-title">Control Over Your Data</div>
+    <div class="section-body">
+      You have the right to:
+      <ul>
+        <li>Access a copy of all data held about you at any time</li>
+        <li>Request correction of inaccurate data</li>
+        <li>Request permanent deletion of your data</li>
+        <li>Withdraw consent at any time without penalty</li>
+      </ul>
+      To exercise any of these rights contact: n.y.veenendaal@hotmail.com
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Personal details -->
+  <div class="field-group">
+    <label class="field-label" for="fullName">Your full name</label>
+    <input class="field-input" type="text" id="fullName" placeholder="Enter your full name" autocomplete="name" />
+  </div>
+  <div class="field-group">
+    <label class="field-label" for="email">Your email address</label>
+    <input class="field-input" type="email" id="email" placeholder="Enter your email address" autocomplete="email" />
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Consent checkboxes -->
+  <div style="margin-bottom:1rem;">
+    <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--bronze);margin-bottom:1rem;">Your consent</div>
+
+    <div class="consent-item" id="c1" onclick="toggleConsent('c1')">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="consent-text">I consent to Royal Regulation collecting and processing my biometric data, assessment scores, and session information for the purpose of delivering personalised coaching.</div>
+    </div>
+
+    <div class="consent-item" id="c2" onclick="toggleConsent('c2')">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="consent-text">I understand my data will be stored securely in Notion and processed using encrypted third-party tools (Make.com, Anthropic Claude) solely to deliver the program.</div>
+    </div>
+
+    <div class="consent-item" id="c3" onclick="toggleConsent('c3')">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="consent-text">I understand my data will never be sold or shared with third parties for commercial purposes, and may only be used in anonymised, de-identified form for program development.</div>
+    </div>
+
+    <div class="consent-item" id="c4" onclick="toggleConsent('c4')">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="consent-text">I understand I can withdraw consent, request access to my data, or request deletion at any time by contacting n.y.veenendaal@hotmail.com.</div>
+    </div>
+
+    <div class="consent-item" id="c5" onclick="toggleConsent('c5')">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="consent-text">I confirm I am 18 years of age or older and am providing this consent voluntarily and with full understanding of the above.</div>
+    </div>
+  </div>
+
+  <!-- Signature -->
+  <div class="signature-group">
+    <label class="field-label" for="signature">Type your full name as your digital signature</label>
+    <input class="field-input" type="text" id="signature" placeholder="Type your full name to confirm consent" />
+  </div>
+
+  <button class="submit-btn" id="submitBtn" onclick="submitForm()">Confirm consent</button>
+  <div class="error-msg" id="errorMsg"></div>
+
+  <div class="footer">
+    <div class="footer-brand">Royal Regulation · Nasim van Veenendaal</div>
+    <div class="footer-note">NSW, Australia · n.y.veenendaal@hotmail.com</div>
+  </div>
+</div>
+</div>
+
+<div id="successScreen">
+<div class="page">
+  <div class="brand">
+    <div class="brand-name">Royal Regulation</div>
+    <div class="brand-divider"></div>
+    <div class="brand-tag">Data & Privacy Consent</div>
+  </div>
+  <div class="success-inner">
+    <div class="success-mark">✦</div>
+    <h2 class="success-title">Consent confirmed.</h2>
+    <p class="success-body">Your data consent has been recorded. Thank you for trusting the process. Your coach will be in touch with next steps before your intake call.</p>
+  </div>
+</div>
+</div>
+
+<script>
+const WEBHOOK_URL = 'https://hook.eu1.make.com/rfcu5xxjvme70los51ced7alh1knjujq';
+const consents = { c1: false, c2: false, c3: false, c4: false, c5: false };
+
+function toggleConsent(id) {
+  consents[id] = !consents[id];
+  document.getElementById(id).classList.toggle('checked', consents[id]);
+}
+
+async function submitForm() {
+  const fullName = document.getElementById('fullName').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const signature = document.getElementById('signature').value.trim();
+  const errEl = document.getElementById('errorMsg');
+  errEl.style.display = 'none';
+
+  if (!fullName) { showError('Please enter your full name.'); return; }
+  if (!email || !email.includes('@')) { showError('Please enter a valid email address.'); return; }
+  if (!Object.values(consents).every(v => v)) { showError('Please confirm all consent items before submitting.'); return; }
+  if (!signature) { showError('Please type your full name as your digital signature.'); return; }
+  if (signature.toLowerCase() !== fullName.toLowerCase()) { showError('Your signature must match your full name exactly.'); return; }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true; btn.textContent = 'Submitting...';
+
+  const today = new Date().toISOString().split('T')[0];
+  const payload = {
+    form_type: 'DATA_CONSENT',
+    full_name: fullName,
+    email: email,
+    date_completed: today,
+    digital_signature: signature,
+    consent_data_collection: consents.c1,
+    consent_storage: consents.c2,
+    consent_no_sale: consents.c3,
+    consent_rights: consents.c4,
+    consent_age: consents.c5,
+    all_consents_given: true
+  };
+
+  try {
+    const res = await fetch(WEBHOOK_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+    if (res.ok) {
+      document.getElementById('formPage').style.display = 'none';
+      document.getElementById('successScreen').style.display = 'block';
+    } else {
+      showError('Something went wrong. Please try again or contact your coach.');
+      btn.disabled = false; btn.textContent = 'Confirm consent';
+    }
+  } catch(e) {
+    showError('Connection error. Please check your internet and try again.');
+    btn.disabled = false; btn.textContent = 'Confirm consent';
+  }
+}
+
+function showError(msg) { const el = document.getElementById('errorMsg'); el.textContent = msg; el.style.display = 'block'; }
+</script>
+</body>
+</html>

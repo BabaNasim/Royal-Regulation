@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Body Awareness Assessment — Royal Regulation</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --obsidian: #0D0D0D; --sovereign: #1A1A1A; --carbon: #2C2A24;
+    --bronze: #8B7355; --gold: #D4A853; --parchment: #F5F0E8;
+    --muted: #888780; --dim: #5F5E5A;
+  }
+  body { background: var(--obsidian); color: var(--parchment); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+  .page { max-width: 680px; margin: 0 auto; padding: 3rem 2rem 5rem; }
+  .brand { display: flex; align-items: center; gap: 1rem; margin-bottom: 3rem; padding-bottom: 1.5rem; border-bottom: 0.5px solid var(--carbon); }
+  .brand-name { font-family: 'EB Garamond', Georgia, serif; font-size: 18px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--parchment); }
+  .brand-divider { width: 0.5px; height: 24px; background: var(--carbon); }
+  .brand-tag { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--bronze); }
+  .form-tag { display: inline-block; font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); background: rgba(212,168,83,0.1); border: 0.5px solid rgba(212,168,83,0.3); padding: 5px 12px; border-radius: 3px; margin-bottom: 1rem; }
+  .form-title { font-family: 'EB Garamond', Georgia, serif; font-size: 32px; color: var(--parchment); line-height: 1.2; margin-bottom: 1rem; }
+  .form-intro { font-size: 14px; color: var(--muted); line-height: 1.75; max-width: 520px; }
+  .field-group { margin-bottom: 1.5rem; }
+  .field-label { display: block; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--bronze); margin-bottom: 8px; }
+  .field-input { width: 100%; background: var(--sovereign); border: 0.5px solid var(--carbon); border-radius: 4px; color: var(--parchment); font-size: 15px; padding: 12px 14px; outline: none; transition: border-color 0.15s; font-family: inherit; }
+  .field-input::placeholder { color: var(--dim); }
+  .field-input:focus { border-color: var(--bronze); }
+  .divider { height: 0.5px; background: var(--carbon); margin: 2rem 0; }
+  .progress-wrap { margin-bottom: 2rem; }
+  .progress-meta { display: flex; justify-content: space-between; margin-bottom: 8px; }
+  .progress-label { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--dim); }
+  .progress-count { font-size: 10px; color: var(--bronze); }
+  .progress-track { height: 1px; background: var(--carbon); overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--gold); transition: width 0.3s ease; width: 0%; }
+  .section-header { margin: 2.5rem 0 1rem; }
+  .section-tag { display: inline-block; font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--bronze); background: rgba(139,115,85,0.1); border: 0.5px solid rgba(139,115,85,0.3); padding: 4px 10px; border-radius: 3px; margin-bottom: 6px; }
+  .section-title { font-family: 'EB Garamond', Georgia, serif; font-size: 20px; color: var(--parchment); margin-bottom: 4px; }
+  .section-desc { font-size: 12px; color: var(--dim); line-height: 1.6; }
+  .question-block { margin-bottom: 1rem; padding: 1.25rem; background: var(--sovereign); border: 0.5px solid var(--carbon); border-radius: 6px; transition: border-color 0.2s; }
+  .question-block.answered { border-color: #3A3228; }
+  .question-num { font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--dim); margin-bottom: 8px; }
+  .question-text { font-size: 14px; color: var(--parchment); line-height: 1.6; margin-bottom: 1rem; }
+  .scale { display: flex; gap: 4px; }
+  .scale-btn { flex: 1; padding: 8px 2px; background: var(--obsidian); border: 0.5px solid var(--carbon); border-radius: 4px; cursor: pointer; text-align: center; transition: all 0.15s; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .scale-btn:hover { border-color: var(--bronze); }
+  .scale-btn.selected { background: rgba(212,168,83,0.08); border-color: var(--gold); }
+  .scale-value { font-size: 14px; font-weight: 500; color: var(--muted); transition: color 0.15s; }
+  .scale-btn.selected .scale-value { color: var(--gold); }
+  .scale-lbl { font-size: 9px; color: var(--dim); transition: color 0.15s; }
+  .scale-btn.selected .scale-lbl { color: var(--bronze); }
+  .scale-ends { display: flex; justify-content: space-between; margin-top: 4px; }
+  .scale-end { font-size: 10px; color: var(--dim); }
+  .submit-btn { width: 100%; padding: 16px; background: var(--gold); color: var(--obsidian); border: none; border-radius: 4px; font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; transition: opacity 0.15s; margin-top: 1rem; }
+  .submit-btn:hover { opacity: 0.88; }
+  .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .error { font-size: 13px; color: #F09595; background: rgba(240,149,149,0.08); border: 0.5px solid rgba(240,149,149,0.2); border-radius: 4px; padding: 12px 14px; margin-top: 12px; display: none; }
+  .footer { margin-top: 4rem; padding-top: 1.5rem; border-top: 0.5px solid var(--carbon); display: flex; justify-content: space-between; }
+  .footer-brand { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim); }
+  .footer-note { font-size: 11px; color: var(--dim); }
+  #successScreen { display: none; }
+  .success-inner { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; text-align: center; }
+  .success-mark { font-family: 'EB Garamond', Georgia, serif; font-size: 64px; color: var(--gold); margin-bottom: 1.5rem; }
+  .success-title { font-family: 'EB Garamond', Georgia, serif; font-size: 28px; color: var(--parchment); margin-bottom: 1rem; }
+  .success-body { font-size: 14px; color: var(--muted); line-height: 1.75; max-width: 400px; }
+  @media (max-width: 520px) { .page { padding: 2rem 1.25rem 4rem; } .scale-lbl { display: none; } }
+</style>
+</head>
+<body>
+
+<div id="formPage">
+<div class="page">
+  <div class="brand">
+    <div class="brand-name">Royal Regulation</div>
+    <div class="brand-divider"></div>
+    <div class="brand-tag">Client Assessment</div>
+  </div>
+
+  <div style="margin-bottom:2.5rem;">
+    <div class="form-tag">Pre-intake · Assessment 2 of 2</div>
+    <h1 class="form-title">Body Awareness Assessment</h1>
+    <p class="form-intro">37 questions exploring how you sense, interpret, and relate to signals from within your body. Answer honestly — there are no right or wrong responses. Takes 8–12 minutes.</p>
+  </div>
+
+  <div class="field-group">
+    <label class="field-label" for="clientName">Your full name</label>
+    <input class="field-input" type="text" id="clientName" placeholder="Enter your full name" autocomplete="name" />
+  </div>
+  <div class="field-group">
+    <label class="field-label" for="clientEmail">Your email address</label>
+    <input class="field-input" type="email" id="clientEmail" placeholder="Enter your email address" autocomplete="email" />
+  </div>
+
+  <div class="divider"></div>
+
+  <p class="form-intro" style="margin-bottom:1.5rem;">For each statement, choose how often it applies to you: <span style="color:var(--parchment);">0 = Never → 5 = Always</span></p>
+
+  <div class="progress-wrap">
+    <div class="progress-meta">
+      <span class="progress-label">Progress</span>
+      <span class="progress-count" id="progressCount">0 of 37</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+
+  <div id="questionsContainer"></div>
+
+  <div class="divider"></div>
+  <button class="submit-btn" id="submitBtn" onclick="submitForm()">Submit assessment</button>
+  <div class="error" id="errorMsg"></div>
+
+  <div class="footer">
+    <div class="footer-brand">Royal Regulation · Nasim van Veenendaal</div>
+    <div class="footer-note">Your data is confidential</div>
+  </div>
+</div>
+</div>
+
+<div id="successScreen">
+<div class="page">
+  <div class="brand">
+    <div class="brand-name">Royal Regulation</div>
+    <div class="brand-divider"></div>
+    <div class="brand-tag">Client Assessment</div>
+  </div>
+  <div class="success-inner">
+    <div class="success-mark">✦</div>
+    <h2 class="success-title">Assessment submitted.</h2>
+    <p class="success-body">Your results have been received and saved securely. Your coach will review them before your intake call. You'll hear from Nasim soon.</p>
+  </div>
+</div>
+</div>
+
+<script>
+const WEBHOOK_URL = 'https://hook.eu1.make.com/rfcu5xxjvme70los51ced7alh1knjujq';
+const optionLabels = ['Never','Rarely','Sometimes','Often','Very often','Always'];
+
+const sections = [
+  { id: 'noticing', name: 'Noticing', desc: 'Awareness of body sensations', reversed: false, questions: [
+    'When I am tense I notice where the tension is located in my body.',
+    'I notice when I am uncomfortable in my body.',
+    'I notice where in my body I am comfortable.',
+    'I notice changes in my breathing, such as whether it slows down or speeds up.'
+  ]},
+  { id: 'not_distracting', name: 'Not Distracting', desc: 'Tendency not to ignore discomfort', reversed: true, questions: [
+    'I do not notice (I ignore) physical tension or discomfort until it becomes more severe.',
+    'I distract myself from sensations of discomfort.',
+    'When I feel pain or discomfort, I try to power through it.',
+    'I try to ignore pain.',
+    'I push feelings of discomfort away by focusing on something.',
+    'When I feel unpleasant body sensations, I occupy myself with something else so I do not have to feel them.'
+  ]},
+  { id: 'not_worrying', name: 'Not Worrying', desc: 'Emotional response to discomfort', reversed: false, questions: [
+    'When I feel physical pain, I become upset.',
+    'I start to worry that something is wrong if I feel any discomfort.',
+    'I can notice an unpleasant body sensation without worrying about it.',
+    'I can stay calm and not worry when I have feelings of discomfort or pain.',
+    'When I am in discomfort or pain I cannot get it out of my mind.'
+  ]},
+  { id: 'attention_regulation', name: 'Attention Regulation', desc: 'Control of body-focused attention', reversed: false, questions: [
+    'I can pay attention to my breath without being distracted by things happening around me.',
+    'I can maintain awareness of my inner bodily sensations even when there is a lot going on around me.',
+    'When I am having a conversation with someone, I can pay attention to my posture.',
+    'I can return my attention to my body if I am distracted.',
+    'I can refocus my attention from thinking to sensing my body.',
+    'I can maintain awareness of my whole body even when a part of me is in pain or discomfort.',
+    'I am able to notice bodily sensations without reacting to them.'
+  ]},
+  { id: 'emotional_awareness', name: 'Emotional Awareness', desc: 'Body-emotion connection', reversed: false, questions: [
+    'I notice how my body changes when I am angry.',
+    'When something is wrong in my life I can feel it in my body.',
+    'I notice that my body feels different after a peaceful experience.',
+    'I notice that my breathing becomes free and easy when I feel comfortable.',
+    'I notice how my body changes when I feel happy / joyful.'
+  ]},
+  { id: 'self_regulation', name: 'Self-Regulation', desc: 'Using body awareness to regulate', reversed: false, questions: [
+    'When I feel overwhelmed I can find a calm place inside.',
+    'When I bring attention to my body I feel a sense of calm.',
+    'I can use my breath to reduce tension.',
+    'When I am caught up in thoughts, I can calm myself by focusing on my body / breathing.'
+  ]},
+  { id: 'body_listening', name: 'Body Listening', desc: 'Active listening for insight', reversed: false, questions: [
+    'I listen for information from my body about my emotional state.',
+    'When I am upset, I take time to explore how my body feels.',
+    'I listen to my body to inform me about what to do in difficult situations.'
+  ]},
+  { id: 'trusting', name: 'Trusting', desc: 'Trust in body signals', reversed: false, questions: [
+    'I feel my body is a safe place.',
+    'I trust body sensations.',
+    'I feel at home in my body.'
+  ]}
+];
+
+const answers = {};
+let qNum = 0;
+
+function buildQuestions() {
+  const container = document.getElementById('questionsContainer');
+  sections.forEach(section => {
+    const hdr = document.createElement('div');
+    hdr.className = 'section-header';
+    hdr.innerHTML = `<div class="section-tag">${section.name}</div><div class="section-title">${section.name}</div><div class="section-desc">${section.desc}</div>`;
+    container.appendChild(hdr);
+
+    section.questions.forEach((q, i) => {
+      qNum++;
+      const key = `${section.id}_${i}`;
+      const block = document.createElement('div');
+      block.className = 'question-block';
+      block.id = `block-${key}`;
+
+      const scale = document.createElement('div');
+      scale.className = 'scale';
+      for (let v = 0; v <= 5; v++) {
+        const btn = document.createElement('div');
+        btn.className = 'scale-btn';
+        btn.onclick = () => selectAnswer(key, v);
+        btn.innerHTML = `<span class="scale-value">${v}</span><span class="scale-lbl">${optionLabels[v]}</span>`;
+        scale.appendChild(btn);
+      }
+
+      block.innerHTML = `<div class="question-num">Question ${qNum} of 37 · ${section.name}</div><div class="question-text">${q}</div>`;
+      block.appendChild(scale);
+      container.appendChild(block);
+    });
+  });
+}
+
+function selectAnswer(key, value) {
+  answers[key] = value;
+  const block = document.getElementById(`block-${key}`);
+  block.classList.add('answered');
+  block.querySelectorAll('.scale-btn').forEach((b, i) => b.classList.toggle('selected', i === value));
+  updateProgress();
+}
+
+function updateProgress() {
+  const filled = Object.keys(answers).length;
+  document.getElementById('progressFill').style.width = (filled / 37 * 100) + '%';
+  document.getElementById('progressCount').textContent = `${filled} of 37`;
+}
+
+function calcSubscale(sectionId, count, reversed) {
+  let total = 0;
+  for (let i = 0; i < count; i++) {
+    const v = answers[`${sectionId}_${i}`];
+    if (v === undefined) return null;
+    total += reversed ? (5 - v) : v;
+  }
+  return parseFloat((total / count).toFixed(2));
+}
+
+async function submitForm() {
+  const name = document.getElementById('clientName').value.trim();
+  const email = document.getElementById('clientEmail').value.trim();
+  const errEl = document.getElementById('errorMsg');
+  errEl.style.display = 'none';
+  if (!name) { showError('Please enter your full name.'); return; }
+  if (!email || !email.includes('@')) { showError('Please enter a valid email address.'); return; }
+  if (Object.keys(answers).length < 37) {
+    showError(`Please answer all 37 statements. ${37 - Object.keys(answers).length} remaining.`); return;
+  }
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true; btn.textContent = 'Submitting...';
+  const today = new Date().toISOString().split('T')[0];
+  const payload = {
+    form_type: 'MAIA',
+    client_name: name,
+    client_email: email,
+    date_completed: today,
+    maia_noticing: calcSubscale('noticing', 4, false),
+    maia_not_distracting: calcSubscale('not_distracting', 6, true),
+    maia_not_worrying: calcSubscale('not_worrying', 5, false),
+    maia_attention_regulation: calcSubscale('attention_regulation', 7, false),
+    maia_emotional_awareness: calcSubscale('emotional_awareness', 5, false),
+    maia_self_regulation: calcSubscale('self_regulation', 4, false),
+    maia_body_listening: calcSubscale('body_listening', 3, false),
+    maia_trusting: calcSubscale('trusting', 3, false)
+  };
+  try {
+    const res = await fetch(WEBHOOK_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+    if (res.ok) {
+      document.getElementById('formPage').style.display = 'none';
+      document.getElementById('successScreen').style.display = 'block';
+    } else {
+      showError('Something went wrong. Please try again or contact your coach.');
+      btn.disabled = false; btn.textContent = 'Submit assessment';
+    }
+  } catch(e) {
+    showError('Connection error. Please check your internet and try again.');
+    btn.disabled = false; btn.textContent = 'Submit assessment';
+  }
+}
+
+function showError(msg) { const el = document.getElementById('errorMsg'); el.textContent = msg; el.style.display = 'block'; }
+buildQuestions();
+</script>
+</body>
+</html>
